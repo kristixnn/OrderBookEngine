@@ -129,7 +129,7 @@ OrderBookEngine/
 ## Build instructions
 
 ```bash
-git clone https://github.com/yourusername/order-book-engine.git
+git clone https://github.com/kristixnn/order-book-engine.git
 cd order-book-engine
 mkdir build && cd build
 cmake ..
