@@ -5,6 +5,9 @@
 #include "OrderType.h"
 #include "OrderModify.h"
 #include "OrderbookLevelInfos.h"
+#include "IntrusiveOrderList.h"
+#include "OrderPool.h"
+
 
 class Orderbook {
 public:
@@ -22,11 +25,11 @@ public:
 
 	std::size_t Size() const;
 	OrderbookLevelInfos GetOrderInfos() const;
-
+	OrderPointer AllocateOrder(OrderType type, OrderId id, Side side, Price price, Quantity quantity);
 private:
 	struct OrderEntry {
 		OrderPointer order_{ nullptr };
-		OrderPointers::iterator location_;
+		//OrderPointers::iterator location_;
 
 	};
 
@@ -41,14 +44,17 @@ private:
 	};
 
 	std::unordered_map<Price, LevelData> data_;
-	std::map<Price, OrderPointers, std::greater<Price>> bids_;//storing the bids ascending order from highest ask
-	std::map<Price, OrderPointers, std::less<Price>> asks_;//storing the asks descending order from lowest bid
+	std::map<Price, IntrusiveOrderList, std::greater<Price>> bids_;//storing the bids ascending order from highest ask
+	//std::vector<Price, std::greater<Price>> bids_;
+	std::map<Price, IntrusiveOrderList, std::less<Price>> asks_;//storing the asks descending order from lowest bid
+	//std::vector<Price, std::less<Price>> asks_;
 	std::unordered_map<OrderId, OrderEntry> orders_;//storing the orders
+	OrderPool<100000> orderPool_;
 	mutable std::mutex ordersMutex_;
 	std::thread ordersPruneThread_;
 	std::condition_variable shutdownConditionVariable_;
 	std::atomic<bool> shutdown_{ false };
-
+	
 	void PruneGoodForDayOrders();
 
 	void CancelOrders(OrderIds orderIds);

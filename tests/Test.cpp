@@ -218,16 +218,7 @@ TEST_P(OrderbookTestsFixture, OrderbookTestSuite)
 	InputHandler handler;
 	const auto [updates, result] = handler.GetInformations(file);
 
-	auto GetOrder = [](const Information& information)
-	{
-		return std::make_shared<Order>(
-			information.orderType_,
-			information.orderId_,
-			information.side_,
-			information.price_,
-			information.quantity_
-		);
-	};
+
 
 	auto GetOrderModify = [](const Information& information)
 	{
@@ -247,7 +238,9 @@ TEST_P(OrderbookTestsFixture, OrderbookTestSuite)
 		{
 		case ActionType::Add:
 		{
-			const Trades& trades = orderbook.AddOrder(GetOrder(update));
+			Order* newOrder = orderbook.AllocateOrder(update.orderType_, update.orderId_, update.side_, update.price_, update.quantity_);
+			ASSERT_NE(newOrder, nullptr) << "order pool exhausted for id: " << update.orderId_;
+			const Trades& trades = orderbook.AddOrder(newOrder);
 		}
 		break;
 		case ActionType::Modify:

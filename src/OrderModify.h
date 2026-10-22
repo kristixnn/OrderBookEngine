@@ -17,11 +17,14 @@ public:
 	Side GetSide() const { return side_; }
 	Price GetPrice() const { return price_; }
 	Quantity GetQuantity() const { return quantity_; }
-
+	
+	//no longer using shared ptrs here
+	/*
 	OrderPointer ToOrderPointer(OrderType type) const 
 	{
 		return std::make_shared<Order>(type, GetOrderId(), GetSide(), GetPrice(), GetQuantity());
 	}
+	*/
 
 	/*Quantity GetInitialQuantity() const { return initialQuantity_; }
 	Quantity GetRemainingQuantity() const { return remainingQuantity_; }
