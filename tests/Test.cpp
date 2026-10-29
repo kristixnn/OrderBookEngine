@@ -238,9 +238,8 @@ TEST_P(OrderbookTestsFixture, OrderbookTestSuite)
 		{
 		case ActionType::Add:
 		{
-			Order* newOrder = orderbook.AllocateOrder(update.orderType_, update.orderId_, update.side_, update.price_, update.quantity_);
-			ASSERT_NE(newOrder, nullptr) << "order pool exhausted for id: " << update.orderId_;
-			const Trades& trades = orderbook.AddOrder(newOrder);
+			
+			const Trades& trades = orderbook.AddOrder(update.orderType_, update.orderId_, update.side_, update.price_, update.quantity_);
 		}
 		break;
 		case ActionType::Modify:
